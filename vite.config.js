@@ -9,6 +9,6 @@ export default defineConfig({
         }),
     ],
     server: {
-        allowedHosts: 'all',
+        allowedHosts: ['hw5t29-5173.csb.app'],
     },
 });
