@@ -1,7 +1,5 @@
 <?php
 
-// app/Models/Blog.php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,7 +21,7 @@ class Blog extends Model
         'seo_keyword',
         'seo_description',
         'order',
-        'is_publish',
+        'is_publish', // Corrected field name for publish status
     ];
 
     /**
@@ -31,7 +29,11 @@ class Blog extends Model
      */
     public function category()
     {
-        return $this->belongsTo(BlogCategory::class, 'blog_category'); // Change the second parameter if needed
+        return $this->belongsTo(BlogCategory::class, 'blog_category'); // Ensure foreign key is correct
     }
-}
 
+    // Cast 'is_publish' as a boolean to handle true/false properly
+    protected $casts = [
+        'is_publish' => 'boolean',
+    ];
+}

@@ -9,20 +9,15 @@ class BlogCategory extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'category_name',
         'icon_name',
         'description',
-        'seo_title',       // SEO title
-        'seo_keyword',     // SEO keyword
-        'seo_description', // SEO description
+        'seo_title',
+        'seo_keyword',
+        'seo_description',
         'order',
-        'is_published',
+        'is_published', // Corrected field name for publish status
     ];
 
     /**
@@ -32,4 +27,9 @@ class BlogCategory extends Model
     {
         return $this->hasMany(Blog::class, 'blog_category');
     }
+
+    // Cast 'is_published' as a boolean to handle true/false properly
+    protected $casts = [
+        'is_published' => 'boolean',
+    ];
 }

@@ -8,7 +8,6 @@ use App\Models\Blog;
 use Illuminate\Support\Facades\Storage;
 use App\Models\BlogCategory;
 
-
 class BlogAddController extends Controller
 {
     /**
@@ -18,13 +17,12 @@ class BlogAddController extends Controller
      */
     public function index()
     {
-        // Fetch categories from the BlogCategory model
-        $categories = BlogCategory::all(); // Retrieve all categories
+        // Fetch categories from the BlogCategory model, filtered by 'is_published' status
+        $categories = BlogCategory::where('is_published', true)->get(); // Retrieve only published categories
     
         // Pass the categories to the view
         return view('admin.pages.blog-Add', compact('categories'));
     }
-    
 
     /**
      * Store a newly created blog in the database.
@@ -36,7 +34,7 @@ class BlogAddController extends Controller
     {
         // Validate the incoming request
         $validatedData = $request->validate([
-            'blog_category' => 'required|string|max:255',
+            'blog_category' => 'required|exists:blog_categories,id', // Ensure blog category exists
             'blog_title' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:blogs,slug',
             'content' => 'required',
@@ -47,9 +45,10 @@ class BlogAddController extends Controller
             'seo_keyword' => 'nullable|string|max:255',
             'seo_description' => 'nullable|string|max:500',
             'order' => 'nullable|integer',
-            'is_publish' => 'nullable|boolean',
+            'is_publish' => 'nullable|boolean', // Make sure is_publish is handled as a boolean
         ], [
             'blog_category.required' => 'The blog category field is required.',
+            'blog_category.exists' => 'The selected blog category is invalid.',
             'blog_title.required' => 'The blog title field is required.',
             'slug.required' => 'The slug field is required.',
             'slug.unique' => 'The slug must be unique.',
@@ -71,7 +70,7 @@ class BlogAddController extends Controller
         $blog->seo_keyword = $validatedData['seo_keyword'] ?? null;
         $blog->seo_description = $validatedData['seo_description'] ?? null;
         $blog->order = $validatedData['order'] ?? null;
-        $blog->is_publish = $request->has('is_publish') ? true : false;
+        $blog->is_publish = $request->has('is_publish') ? true : false; // Handle publish status as boolean
 
         // Handle file upload for the image (optional)
         if ($request->hasFile('image')) {

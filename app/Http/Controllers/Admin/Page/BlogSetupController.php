@@ -1,9 +1,10 @@
 <?php
+
 namespace App\Http\Controllers\Admin\Page;
 
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
-use App\Models\BlogCategory; // Corrected to use BlogCategory model
+use App\Models\BlogCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -12,8 +13,8 @@ class BlogSetupController extends Controller
     // Display the blog setup page with the list of blogs
     public function index()
     {
-        // Fetch blogs, paginate them (15 per page, adjust as needed)
-        $blogs = Blog::paginate(15);
+        // Fetch blogs and their categories, paginate them (15 per page, adjust as needed)
+        $blogs = Blog::with('category')->paginate(15);
 
         // Pass the blogs data to the view
         return view('admin.pages.blog-Setup', compact('blogs'));
@@ -24,19 +25,18 @@ class BlogSetupController extends Controller
     {
         $blog = Blog::findOrFail($id);
         
-        // Fetch all blog categories
-        $categories = BlogCategory::all(); // Corrected to BlogCategory
+        // Fetch all blog categories, filtered by the 'is_published' status
+        $categories = BlogCategory::where('is_published', true)->get();
         
         // Pass the blog and categories to the view
         return view('admin.pages.blog-Edit', compact('blog', 'categories'));
     }
 
-    
     public function update(Request $request, $id)
     {
         // Validate the request
         $validator = Validator::make($request->all(), [
-            'blog_category' => 'required|string|max:255',
+            'blog_category' => 'required|exists:blog_categories,id',  // Ensure blog category exists
             'blog_title' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:blogs,slug,' . $id,
             'content' => 'required',
@@ -74,8 +74,6 @@ class BlogSetupController extends Controller
         return redirect()->route('admin.Pages.blog-Setup')->with('success', 'Blog updated successfully.');
     }
     
-    
-
     // Delete a specific blog
     public function destroy($id)
     {
@@ -90,6 +88,4 @@ class BlogSetupController extends Controller
 
         return redirect()->route('admin.Pages.blog-Setup')->with('success', 'Blog deleted successfully.');
     }
-
-
 }
