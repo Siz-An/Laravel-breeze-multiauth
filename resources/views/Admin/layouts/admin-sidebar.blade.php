@@ -174,8 +174,8 @@
                         </summary>
                         <ul class="pl-4 mt-2 space-y-1">
                             <li>
-                                <a href="#" class="flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded">
-                                    All Details
+                                <a href="{{ url('admin/user/manageUser') }}" class="flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded">
+                                    Manage User
                                 </a>
                             </li>
                         </ul>
