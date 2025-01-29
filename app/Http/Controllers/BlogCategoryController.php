@@ -26,9 +26,13 @@ class BlogCategoryController extends Controller
      * @return \Illuminate\View\View
      */
     public function create()
-    {
-        return view('admin.Pages.blog-category-create');
-    }
+{
+    // Fetch all blog categories for the dropdown
+    $categories = BlogCategory::orderBy('order', 'asc')->get();
+
+    // Return the create view with categories
+    return view('admin.Pages.blog-category', compact('categories'));
+}
 
     /**
      * Handle form submission for creating a new blog category.
@@ -39,36 +43,35 @@ class BlogCategoryController extends Controller
     public function store(Request $request)
     {
         try {
+            // Force the value to be a boolean
+            $request->merge(['is_published' => $request->has('is_published')]);
+    
             // Validate the form data
             $validatedData = $request->validate([
                 'category_name' => 'required|string|max:255',
                 'icon_name' => 'nullable|string|max:255',
                 'description' => 'nullable|string',
-                'seo_title' => 'nullable|string|max:255', // SEO title
-                'seo_keyword' => 'nullable|string|max:255', // SEO keyword
-                'seo_description' => 'nullable|string', // SEO description
+                'seo_title' => 'nullable|string|max:255',
+                'seo_keyword' => 'nullable|string|max:255',
+                'seo_description' => 'nullable|string',
                 'order' => 'nullable|integer',
-                'is_published' => 'nullable|boolean',
+                'is_published' => 'required|boolean',
             ]);
-
-            // Set default values for nullable fields
-            $validatedData['order'] = $validatedData['order'] ?? 0;
-            $validatedData['is_published'] = $validatedData['is_published'] ?? false;
-
-            // Create a new blog category
+    
+            // Create the blog category
             BlogCategory::create($validatedData);
-
+    
             // Redirect back with a success message
             return redirect()->route('admin.Pages.blog-category.index')->with('success', 'Category created successfully!');
         } catch (\Exception $e) {
             // Log the error for debugging
             Log::error('Error creating blog category: ' . $e->getMessage());
-
+    
             // Redirect back with an error message
             return redirect()->route('admin.Pages.blog-category.index')->with('error', 'An error occurred while creating the category. Please try again.');
         }
     }
-
+    
     /**
      * Show the form for editing the specified blog category.
      *
@@ -147,5 +150,19 @@ class BlogCategoryController extends Controller
             // Redirect back with an error message
             return redirect()->route('admin.Pages.blog-category.index')->with('error', 'An error occurred while deleting the category. Please try again.');
         }
+    }
+
+    /**
+     * Fetch all categories for the dropdown in the blog form.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function fetchCategoriesForDropdown()
+    {
+        // Fetch all blog categories
+        $categories = BlogCategory::orderBy('order', 'asc')->get();
+        
+        // Return the categories to the view for the dropdown
+        return view('admin.Pages.blog-create', compact('categories'));
     }
 }

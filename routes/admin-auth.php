@@ -11,13 +11,11 @@ use Illuminate\Support\Facades\Route;
 // Admin Guest Routes (Unauthenticated)
 Route::middleware('guest:admin')->prefix('admin')->name('admin.')->group(function () {
     // Registration Routes
-    Route::get('register', [RegisteredUserController::class, 'create'])
-        ->name('register');
+    Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
     Route::post('register', [RegisteredUserController::class, 'store']);
 
     // Login Routes
-    Route::get('login', [AuthenticatedSessionController::class, 'create'])
-        ->name('login');
+    Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 });
 
@@ -35,8 +33,9 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
 
     // Blog Category Routes
     Route::prefix('/Pages')->name('Pages.')->group(function () {
-        // Blog Category Management
+        // Blog Category Routes
         Route::get('/blog-category', [BlogCategoryController::class, 'index'])->name('blog-category.index');
+        Route::get('/blog-category/create', [BlogCategoryController::class, 'create'])->name('blog-category.create');
         Route::get('/blog-category/edit/{id}', [BlogCategoryController::class, 'edit'])->name('blog-category.edit');
         Route::post('/blog-category/store', [BlogCategoryController::class, 'store'])->name('blog-category.store');
         Route::put('/blog-category/update/{id}', [BlogCategoryController::class, 'update'])->name('blog-category.update');
@@ -44,13 +43,15 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
 
         // Blog Add management
         Route::get('/blog-Add', [BlogAddController::class, 'index'])->name('blog-Add');
-        Route::post('/blog-store', [BlogAddController::class, 'store'])->name('blog.store'); // Add this line
+        Route::post('/blog-store', [BlogAddController::class, 'store'])->name('blog.store');
 
-        // Blog Setup Route
         Route::get('/blog-Setup', [BlogSetupController::class, 'index'])->name('blog-Setup');
+        Route::get('/blog-edit/{id}', [BlogSetupController::class, 'edit'])->name('blog.edit'); // Edit route
+        Route::put('/blog-update/{id}', [BlogSetupController::class, 'update'])->name('blog.update'); // Update route
+        Route::delete('/blog-destroy/{id}', [BlogSetupController::class, 'destroy'])->name('blog.destroy'); // Delete route
+   
     });
 
     // Logout Route
-    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
-        ->name('logout');
+    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });

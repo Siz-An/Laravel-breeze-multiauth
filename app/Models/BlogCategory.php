@@ -24,4 +24,12 @@ class BlogCategory extends Model
         'order',
         'is_published',
     ];
+
+    /**
+     * Define the relationship with the Blog model.
+     */
+    public function blogs()
+    {
+        return $this->hasMany(Blog::class, 'blog_category');
+    }
 }

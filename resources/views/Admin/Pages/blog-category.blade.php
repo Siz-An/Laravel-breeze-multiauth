@@ -1,8 +1,6 @@
 <x-admin-app-layout>
     <body class="bg-gray-50 font-sans">
         <div class="container mx-auto p-4">
-     
-
             <!-- Success and Error Messages -->
             @if (session('success'))
                 <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-2 mb-4 rounded text-xs">
@@ -74,7 +72,7 @@
                             <!-- Is Published -->
                             <div class="flex items-center">
                                 <input type="checkbox" name="is_published" class="w-4 h-4 border border-gray-300 rounded text-xs">
-                                <label class="ml-2 text-xs text-gray-700">Is Publish</label>
+                                <label class="ml-2 text-xs text-gray-700">Is Published</label>
                             </div>
                         </div>
                     
@@ -111,7 +109,7 @@
                                     <th class="px-3 py-2 font-medium text-gray-700 border">Category Name</th>
                                     <th class="px-3 py-2 font-medium text-gray-700 border">Icon</th>
                                     <th class="px-3 py-2 font-medium text-gray-700 border">Order</th>
-                                    <th class="px-3 py-2 font-medium text-gray-700 border">Is Publish?</th>
+                                    <th class="px-3 py-2 font-medium text-gray-700 border">Is Published?</th>
                                     <th class="px-3 py-2 font-medium text-gray-700 border">Action</th>
                                 </tr>
                             </thead>
@@ -140,7 +138,7 @@
                     <!-- Pagination -->
                     <div class="mt-4 flex justify-between items-center text-xs">
                         <div class="text-gray-700">
-                            Showing 1 to {{ $categories->count() }} of {{ $categories->total() }} entries
+                            Showing 1 to {{ $categories->count() }} of {{ $categories->count() }} entries
                         </div>
                         <div class="flex gap-1">
                             <button class="px-2 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">First</button>

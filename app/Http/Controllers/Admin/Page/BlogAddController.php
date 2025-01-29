@@ -1,9 +1,13 @@
 <?php
+
 namespace App\Http\Controllers\Admin\Page;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Blog;
+use Illuminate\Support\Facades\Storage;
+use App\Models\BlogCategory;
+
 
 class BlogAddController extends Controller
 {
@@ -14,8 +18,13 @@ class BlogAddController extends Controller
      */
     public function index()
     {
-        return view('admin.pages.blog-Add');
+        // Fetch categories from the BlogCategory model
+        $categories = BlogCategory::all(); // Retrieve all categories
+    
+        // Pass the categories to the view
+        return view('admin.pages.blog-Add', compact('categories'));
     }
+    
 
     /**
      * Store a newly created blog in the database.
@@ -39,6 +48,15 @@ class BlogAddController extends Controller
             'seo_description' => 'nullable|string|max:500',
             'order' => 'nullable|integer',
             'is_publish' => 'nullable|boolean',
+        ], [
+            'blog_category.required' => 'The blog category field is required.',
+            'blog_title.required' => 'The blog title field is required.',
+            'slug.required' => 'The slug field is required.',
+            'slug.unique' => 'The slug must be unique.',
+            'content.required' => 'The content field is required.',
+            'image.image' => 'The file must be an image.',
+            'image.mimes' => 'The image must be a file of type: jpeg, png, jpg, gif.',
+            'image.max' => 'The image may not be greater than 2MB.',
         ]);
 
         // Create a new blog instance
@@ -53,17 +71,22 @@ class BlogAddController extends Controller
         $blog->seo_keyword = $validatedData['seo_keyword'] ?? null;
         $blog->seo_description = $validatedData['seo_description'] ?? null;
         $blog->order = $validatedData['order'] ?? null;
-        $blog->is_publish = $request->has('is_publish'); // Checkbox returns true if checked
+        $blog->is_publish = $request->has('is_publish') ? true : false;
 
         // Handle file upload for the image (optional)
         if ($request->hasFile('image')) {
-            $blog->image = $request->file('image')->store('blogs', 'public'); // Save to storage/app/public/blogs
+            // Ensure the directory exists
+            if (!Storage::disk('public')->exists('blogs')) {
+                Storage::disk('public')->makeDirectory('blogs');
+            }
+            // Store the file
+            $blog->image = $request->file('image')->store('blogs', 'public');
         }
 
         // Save the blog to the database
         $blog->save();
 
-        // Redirect with a success message
-        return redirect()->route('admin.Pages.blog-Add')->with('success', 'Blog created successfully!');
+        // Redirect with a success message and to the blog-setup page
+        return redirect()->route('admin.Pages.blog-Setup')->with('success', 'Blog successfully submitted!');
     }
 }
