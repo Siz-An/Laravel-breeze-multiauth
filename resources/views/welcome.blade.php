@@ -37,11 +37,11 @@
                                     Log in
                                 </a>
 
-                                @if (Route::has('register'))
+                                {{-- @if (Route::has('register'))
                                     <a href="{{ route('register') }}" class="rounded-md px-4 py-2 border border-gray-300 text-black hover:bg-gray-200 dark:border-gray-600 dark:text-white dark:hover:bg-gray-800">
                                         Register
                                     </a>
-                                @endif
+                                @endif --}}
                             @endauth
 
                             @auth('admin')

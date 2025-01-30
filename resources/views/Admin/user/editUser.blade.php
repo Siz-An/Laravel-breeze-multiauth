@@ -3,9 +3,7 @@
         <div class="container mx-auto p-4">
             <div class="container pt-2">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 text-gray-900 dark:text-gray-100">
-                        {{ __("Edit User") }}
-                    </div>
+                   
                 </div>
 
                 <div class="w-full bg-white p-4 rounded-lg shadow-sm">
