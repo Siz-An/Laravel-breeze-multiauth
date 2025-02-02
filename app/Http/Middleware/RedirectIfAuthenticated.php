@@ -25,7 +25,6 @@ class RedirectIfAuthenticated
     public function handle(Request $request, Closure $next, string ...$guards): Response
     {
         $guards = empty($guards) ? [null] : $guards;
-
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
                 return redirect($this->redirectTo($request));
@@ -40,9 +39,11 @@ class RedirectIfAuthenticated
      */
     protected function redirectTo(Request $request): ?string
     {
-
+        if($request->routeIs('editor.login')){
+            return  route('editor.dashboard');
+        }
         if($request->routeIs('admin.login')){
-            return route('admin.dashboard');
+            return  route('admin.dashboard');
         }
 
         return static::$redirectToCallback

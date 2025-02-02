@@ -114,11 +114,12 @@ class Authenticate implements AuthenticatesRequests
      */
     protected function redirectTo(Request $request)
     {
-
-        if($request->routeIs('admin.dashboard') || $request->routeIs('admin.*')){
-            return route('admin.login');
+        if($request->routeIs('editor.dashboard')){
+            return  route('editor.login');
         }
-
+        if($request->routeIs('admin.dashboard')){
+            return  route('admin.login');
+        }
         if (static::$redirectToCallback) {
             return call_user_func(static::$redirectToCallback, $request);
         }

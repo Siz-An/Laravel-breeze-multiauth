@@ -1,6 +1,6 @@
 <x-guest-layout>
-    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight text-center">
-        {{ __('Admin Register') }}
+    <h2 class="font-semibold text-xl text-center py-4 text-gray-800 dark:text-gray-200 leading-tight">
+        {{ __('Admin Registration') }}
     </h2>
     <form method="POST" action="{{ route('admin.register') }}">
         @csrf
