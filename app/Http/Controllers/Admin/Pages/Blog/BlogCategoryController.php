@@ -129,4 +129,18 @@ class BlogCategoryController extends Controller
         return view('admin.Pages.Blog.blog-create', compact('categories'));
     }
     
+    public function togglePublish(Request $request, $id)
+{
+    try {
+        $category = BlogCategory::findOrFail($id);
+        $category->is_published = $request->input('is_published');
+        $category->save();
+
+        return response()->json(['success' => true]);
+    } catch (\Exception $e) {
+        Log::error('Error toggling blog category publish status: ' . $e->getMessage());
+        return response()->json(['success' => false]);
+    }
+}
+    
 }

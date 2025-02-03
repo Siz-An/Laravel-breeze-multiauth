@@ -89,7 +89,7 @@
                         <!-- Order -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Order:</label>
-                            <input type="number" name="order" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="{{ old('order', $category->order) }}">
+                            <input type="number" name="order" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="{{ old('order', $category->order) }}" required>
                             @error('order')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror

@@ -17,12 +17,12 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-sans antialiased">
-    <x-navbar class="fixed"/>
+<body class="font-sans antialiased ">
+    <x-navbar/>
     <div class="flex min-h-screen bg-gray-100 dark:bg-gray-50 ">
-        <div class=" ">
+        <div>
             <!-- Sidebar -->
-            <x-sidebar class="" />
+            <x-sidebar />
 
     </div>
 

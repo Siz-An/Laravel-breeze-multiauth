@@ -1,5 +1,5 @@
 <nav x-data="{ isCollapsed: false }">
-    <div :class="isCollapsed ? 'w-20' : 'w-64'" class="bg-[#10101E] shadow-lg h-screen p-4 pb-8 flex flex-col transition-all duration-300 ease-in-out"> ">
+    <div :class="isCollapsed ? 'w-20' : 'w-64'" class="bg-[#10101E] shadow-lg h-screen p-4 pb-8 flex flex-col transition-all duration-300 "> 
         <div class="flex flex-col h-full">
             <div class="flex justify-between items-center mb-2">
                 <h2 x-show="!isCollapsed" class="text-xl font-bold text-[#9797A4]">CMS</h2>
@@ -48,8 +48,7 @@
                         </summary>
                         <ul x-show="!isCollapsed" class="pl-4 mt-2 text-sm space-y-1">
                             <li><a href="{{route('admin.blog.blogCategory')}}" class="flex items-center p-2 text-[#9797A4] hover:bg-gray-700 rounded">Blog Category</a></li>
-                            <li><a href="{{route('admin.blogSetup.blogSetup')}}" class="flex items-center p-2 text-[#9797A4] hover:bg-gray-700 rounded">Blog Setup</a></li>
-                            
+                            <li><a href="{{ route('admin.blogSetup.index') }}" class="flex items-center p-2 text-[#9797A4] hover:bg-gray-700 rounded">Blog Setup</a></li>
                         </ul>
                     </details>
                 </li>

@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('seo_keyword', 255)->nullable(); // seo_keyword
             $table->string('seo_description', 500)->nullable(); // seo_description
             $table->integer('order')->nullable(); // order (nullable)
-            $table->boolean('is_publish')->nullable(); // is_publish (nullable)
+            $table->boolean('is_published')->default(false);
             $table->timestamps();
         });
     }

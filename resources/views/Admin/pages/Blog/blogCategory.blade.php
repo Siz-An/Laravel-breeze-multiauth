@@ -71,14 +71,18 @@
                             <!-- Order -->
                             <div>
                                 <label class="block text-xs font-medium text-gray-700 mb-1">Order:</label>
-                                <input type="number" name="order" class="w-full px-2 py-1 border border-gray-300 rounded text-xs" placeholder="Enter Order">
+                                <input type="number" name="order" class="w-full px-2 py-1 border border-gray-300 rounded text-xs" placeholder="Enter Order" required>
                             </div>
                     
-                            <!-- Is Published -->
-                            <div class="flex items-center">
-                                <input type="checkbox" name="is_published" class="w-4 h-4 border border-gray-300 rounded text-xs">
-                                <label class="ml-2 text-xs text-gray-700">Is Published</label>
-                            </div>
+<!-- Is Published -->
+
+<div class="flex items-center">
+    <label class="relative inline-flex items-center cursor-pointer">
+        <input type="checkbox" name="is_published" class="sr-only peer">
+        <div class="w-10 h-5 bg-gray-300 rounded-full peer-checked:bg-green-500 peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-transform dark:bg-red-700 peer-checked:after:border-white"></div>
+        <span class="ml-3 text-xs text-gray-700">Is Published</span>
+    </label>
+</div>
                         </div>
                     
                         <!-- Form Buttons -->
@@ -116,7 +120,15 @@
                                         <td class="px-3 py-2 text-gray-700 border">{{ $category->category_name }}</td>
                                         <td class="px-3 py-2 text-gray-700 border">{{ $category->icon_name }}</td>
                                         <td class="px-3 py-2 text-gray-700 border">{{ $category->order }}</td>
-                                        <td class="px-3 py-2 text-gray-700 border">{{ $category->is_published ? 'Y' : 'N' }}</td>
+                                        <td class="px-3 py-2 text-gray-700 border">
+                                            <label class="relative inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" name="is_published" class="sr-only peer" id="is_published_{{ $category->id }}" data-category-id="{{ $category->id }}" {{ $category->is_published ? 'checked' : '' }}>
+                                                <div class="w-10 h-5 bg-gray-300 rounded-full peer-checked:bg-blue-500 peer-checked:after:translate-x-full after:content-['']
+                                                 after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full 
+                                                 after:h-4 after:w-4 after:transition-transform dark:bg-gray-700
+                                                  peer-checked:after:border-white"></div>
+                                            </label>
+                                        </td>
                                         <td class="px-3 py-2 text-gray-700 border">
                                             <a href="{{ route('admin.blog.edit', $category->id) }}" class="text-blue-600 hover:text-blue-800">Edit</a>
                                             <form action="{{ route('admin.blog.destroy', $category->id) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this category?');">
@@ -147,4 +159,37 @@
             </div>
         </div>
     </body>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('input[name="is_published"]');
+    
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const categoryId = this.getAttribute('data-category-id');
+                    const isPublished = this.checked;
+    
+                    fetch('/admin/blog/category/' + categoryId + '/toggle-publish', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({ is_published: isPublished })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // alert('Category status updated successfully!');
+                        } else {
+                            // alert('Error updating category status.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        // alert('Error updating category status.');
+                    });
+                });
+            });
+        });
+    </script>
 </x-admin-app-layout>

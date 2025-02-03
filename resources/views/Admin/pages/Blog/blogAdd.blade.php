@@ -1,33 +1,35 @@
 <x-admin-app-layout>
     <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
 
-<!-- Form Header -->
-<div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-    <h2 class="text-2xl font-semibold text-gray-800">Add New Blog</h2>
-    <!-- Cancel Button with JavaScript Redirection -->
-    <button type="button" onclick="window.location.href='{{ route('admin.Pages.blog-Setup') }}';" class="text-red-500 hover:text-red-700 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-        Cancel
-    </button>
-</div>
+        <!-- Form Header -->
+        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+            <h2 class="text-2xl font-semibold text-gray-800">Add New Blog</h2>
+            <!-- Cancel Button with JavaScript Redirection -->
+            <button type="button" onclick="window.location.href='{{ route('admin.blogSetup.index') }}';" class="text-red-500 hover:text-red-700 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                Cancel
+            </button>
+        </div>
 
         <!-- Scrollable Form Container -->
         <div class="overflow-y-auto max-h-[70vh] p-6">
-            <form id="addBlogForm" action="{{ route('admin.Pages.blog.store') }}" method="POST" enctype="multipart/form-data">
+            <form id="addBlogForm" action="{{ route('admin.blogSetup.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-
-<!-- Blog Category -->
-<div class="mb-4">
-    <label class="block text-gray-700 text-sm font-bold mb-2" for="blog-category">Blog Category</label>
-    <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="blog-category" name="blog_category" required>
-        <option value="">Select a category</option>
-        @foreach($categories as $category)
-            <option value="{{ $category->id }}">{{ $category->category_name }}</option>
-        @endforeach
-    </select>
-</div>
-
+                    <!-- Blog Category -->
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="blog-category">Blog Category</label>
+                        <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="blog-category" name="blog_category" required>
+                            <option value="">Select a category</option>
+                            @if($categories)
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}">{{ $category->category_name }}</option>
+                                @endforeach
+                            @else
+                                <option value="">No categories available</option>
+                            @endif
+                        </select>
+                    </div>
 
                     <!-- Blog Title -->
                     <div class="mb-4">
@@ -62,7 +64,7 @@
                     <!-- Author -->
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2" for="author">Author</label>
-                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="author" type="text" name="author" placeholder="Enter author name" required>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="author" type="text" name="author" placeholder="Enter author name">
                     </div>
 
                     <!-- SEO Title -->
@@ -89,16 +91,16 @@
                         <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="order" type="number" name="order" placeholder="Enter order">
                     </div>
 
-                    <!-- Is Publish -->
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="is_publish">Publish</label>
-                        <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="is_publish" name="is_publish">
+                    <!-- Is Published -->
+                      
+                       <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="is_published">Published</label>
+                        <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="is_published" name="is_published">
                             <option value="1">Yes</option>
                             <option value="0">No</option>
                         </select>
                     </div>
                 </div>
-
 
                 <!-- Submit Button -->
                 <div class="flex items-center justify-end mt-6">
@@ -115,7 +117,7 @@
         <script type="text/javascript">
             window.onload = function() {
                 alert("{{ session('success') }}");
-                window.location.href = "{{ route('admin.Pages.blog-Setup') }}"; // Redirect to blog setup page
+                window.location.href = "{{ route('admin.blogSetup.index') }}"; // Redirect to blog setup page
             }
         </script>
     @endif

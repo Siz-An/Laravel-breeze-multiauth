@@ -9,6 +9,9 @@ class BlogSetup extends Model
 {
     use HasFactory;
 
+    // Explicitly set the table name
+    protected $table = 'blog_setups';
+
     protected $fillable = [
         'blog_category',  // Foreign key to BlogCategory
         'blog_title',
@@ -21,7 +24,7 @@ class BlogSetup extends Model
         'seo_keyword',
         'seo_description',
         'order',
-        'is_publish', // Corrected field name for publish status
+        'is_published', // Corrected field name for publish status
     ];
 
     /**
@@ -34,6 +37,6 @@ class BlogSetup extends Model
 
     // Cast 'is_publish' as a boolean to handle true/false properly
     protected $casts = [
-        'is_publish' => 'boolean',
+        'is_published' => 'boolean',
     ];
 }
