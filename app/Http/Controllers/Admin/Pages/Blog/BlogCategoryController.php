@@ -2,91 +2,131 @@
 
 namespace App\Http\Controllers\admin\pages\Blog;
 
-use App\Models\User;
-use Illuminate\Http\Request;
-use App\Models\editor\Editor;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
 use App\Models\admin\pages\blog\BlogCategory;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class BlogCategoryController extends Controller
 {
+    /**
+     * Display the form and table for blog categories.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function index()
+    {
+        // Fetch all blog categories ordered by 'order' column (ascending) with pagination
+        $categories = BlogCategory::orderBy('order', 'asc')->paginate(10); // 10 items per page
+        return view('admin.pages.Blog.blogCategory', compact('categories'));
 
-    public function store(request $request){
-        try{
-            
-            $validateData = $request->validate([
-                'category_name'=>'required|string|min:3',
-                'icon_name'=>'required|string|min:3',
-                'description'=>'nullable|string|min:3',
-                'is_published' => 'nullable|in:0,1',
+    }
 
+    /**
+     * Show the form for creating a new blog category.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function create()
+    {
+        // Fetch all blog categories for the dropdown
+        $categories = BlogCategory::orderBy('order', 'asc')->get();
+    
+        // Return the create view with categories
+        return view('admin.pages.Blog.blogCategory', compact('categories'));
+    }
+    
+
+    /**
+     * Handle form submission for creating a new blog category.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store(Request $request)
+    {
+        try {
+            $request->merge(['is_published' => $request->has('is_published')]);
+    
+            $validatedData = $request->validate([
+                'category_name' => 'required|string|max:255',
+                'icon_name' => 'nullable|string|max:255',
+                'description' => 'nullable|string',
+                'seo_title' => 'nullable|string|max:255',
+                'seo_keyword' => 'nullable|string|max:255',
+                'seo_description' => 'nullable|string',
+                'order' => 'nullable|integer',
+                'is_published' => 'required|boolean',
             ]);
-            Log::info('Validation Data:', $validateData); // Check if validation is passing
-
-            BlogCategory::create([
-                'category_name'=>$validateData['category_name'],
-                'icon_name'=>$validateData['icon_name'],
-                'description'=>$validateData['description'] ?? null,
-                'is_published' => $request->input('is_published',0),
-            ]);
-            return redirect()->route('admin.blog.blogSetup')->with('success','Blog added Successfully!');
+    
+            BlogCategory::create($validatedData);
+    
+            return redirect()->route('admin.blog.blogCategory')->with('success', 'Category created successfully!');
+        } catch (\Exception $e) {
+            Log::error('Error creating blog category: ' . $e->getMessage());
+    
+            return redirect()->route('admin.blog.blogCategory')->with('error', 'An error occurred while creating the category. Please try again.');
         }
-        catch(\Exception $e){
-            Log::error('Error creating user: ', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
+    }
+    
+    public function update(Request $request, $id)
+    {
+        try {
+            $category = BlogCategory::findOrFail($id);
+    
+            $validatedData = $request->validate([
+                'category_name' => 'required|string|max:255',
+                'icon_name' => 'nullable|string|max:255',
+                'description' => 'nullable|string',
+                'seo_title' => 'nullable|string|max:255',
+                'seo_keyword' => 'nullable|string|max:255',
+                'seo_description' => 'nullable|string',
+                'order' => 'nullable|integer',
+                'is_published' => 'nullable|boolean',
             ]);
-            return redirect()->route('admin.blog.blogSetup')->with('error', 'An error occurred while creating the blog. Please try again.');
-       
+    
+            $category->update($validatedData);
+    
+            return redirect()->route('admin.blog.blogCategory')->with('success', 'Category updated successfully!');
+        } catch (\Exception $e) {
+            Log::error('Error updating blog category: ' . $e->getMessage());
+    
+            return redirect()->route('admin.blog.blogCategory')->with('error', 'An error occurred while updating the category. Please try again.');
         }
     }
-    public function destroy(string $id){
-        $data = BlogCategory::where('id',$id)->delete();
-        return redirect()->route('admin.user.blogSetup')->with('success', 'Data deleted successfully.');
-    }
-
-
-    public function storeEdit($id){
-        $blog = BlogCategory::findOrFail($id);
-
-        return view('admin.blog.blogSetupEdit',compact('blog'));
-    }
-
-    public function update(request $request, $id){
-        $validateData = $request->validate([
-            'category_name'=>'required|string|min:3',
-            'icon_name'=>'required|string|min:3',
-            'description'=>'nullable|string|min:3',
-            'is_published' => 'nullable|in:0,1',
-
-        ]);
-        $blog = BlogCategory::findOrFail($id);
-        $blog->is_published = $request->filled('is_published') ? 1 : 0; // Corrected column name
-        $blog->category_name  = $request->category_name ; // Corrected column name
-        $blog->icon_name  = $request->icon_name ; // Corrected column name
-        $blog->description  = $request->description ; // Corrected column name
-
-        
-        $blog->save();
-
-        return redirect()->route('admin.blog.blogSetup')->with('success', 'Data Updated successfully.');
-
-    }
-
-
-    // Display the user management page
-    public function blogCategory()
+    public function edit($id)
 {
-    // Retrieve the blogs and categories
-    $blogsData = BlogCategory::paginate(10); // Adjust the number as per your requirement
-
-    // Pass both variables to the view
-    return view('admin.blog.blogCategory', [
-        'blogsData' => $blogsData,
-    ]);
+    $category = BlogCategory::findOrFail($id);
+    return view('admin.pages.Blog.blogCategoryEdit', compact('category'));
 }
+
+    public function destroy($id)
+    {
+        try {
+            $category = BlogCategory::findOrFail($id);
+    
+            $category->delete();
+    
+            return redirect()->route('admin.blog.blogCategory')->with('success', 'Category deleted successfully!');
+        } catch (\Exception $e) {
+            Log::error('Error deleting blog category: ' . $e->getMessage());
+    
+            return redirect()->route('admin.blog.blogCategory')->with('error', 'An error occurred while deleting the category. Please try again.');
+        }
+    }
+
+    /**
+     * Fetch all categories for the dropdown in the blog form.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function fetchCategoriesForDropdown()
+    {
+        // Fetch all blog categories
+        $categories = BlogCategory::orderBy('order', 'asc')->get();
+        
+        // Return the categories to the view for the dropdown
+        return view('admin.Pages.Blog.blog-create', compact('categories'));
+    }
     
 }
