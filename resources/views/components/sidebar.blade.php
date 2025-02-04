@@ -32,7 +32,7 @@
                             <span x-show="!isCollapsed" class="ml-3">User Management</span>
                         </summary>
                         <ul x-show="!isCollapsed" class="pl-4 mt-2 text-sm space-y-1">
-                            <li><a href="{{route('admin.user.manageUser')}}" class="flex items-center p-2 text-[#9797A4] hover:bg-gray-700 rounded">Manage User</a></li>
+                            {{-- <li><a href="{{route('admin.user.manageUser')}}" class="flex items-center p-2 text-[#9797A4] hover:bg-gray-700 rounded">Manage User</a></li> --}}
                             <li><a href="#" class="flex items-center p-2 text-[#9797A4] hover:bg-gray-700 rounded">Manage Permission</a></li>
                         </ul>
                     </details>

@@ -110,4 +110,11 @@ class BlogSetupController extends Controller
 
         return redirect()->route('admin.blogSetup.index')->with('success', 'Blog deleted successfully.');
     }
+
+    public function showBlogs()
+{
+    $blogs = BlogSetup::where('is_published', true)->orderBy('created_at', 'desc')->get();
+    return view('welcome', compact('blogs'));
+}
+
 }

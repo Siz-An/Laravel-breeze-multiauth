@@ -12,15 +12,15 @@ class DashboardController extends Controller
 {
     public function dashboard(){
         $totalUser = User::count();
-        $totalEditor = Editor::count();
+        // $totalEditor = Editor::count();
         $totalAdmin =  Admin::count();
 
-    \Log::info('Total Users: ' . $totalUser);
-    \Log::info('Total Editors: ' . $totalEditor);
+    // \Log::info('Total Users: ' . $totalUser);
+    // \Log::info('Total Editors: ' . $totalEditor);
     \Log::info('Total Admins: ' . $totalAdmin);
         return view ('admin.dashboard',[
-            'totalUser' =>$totalUser,
-            'totalEditor'=>$totalEditor,
+            // 'totalUser' =>$totalUser,
+            // 'totalEditor'=>$totalEditor,
             'totalAdmin'=>$totalAdmin,
         ]);
     }
